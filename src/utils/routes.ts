@@ -1,5 +1,7 @@
-export enum SCREENS {
-    mainPage = '/',
-    authPage = '/profile',
-    signUpPage = '/marketplace',
+export enum Pages {
+    main = '/',
+    auth = '/signin',
+    signUp = '/signUp',
+    resetPassword = '/resetPassword',
+    setNewPassword = '/resetPassword/new',
 }

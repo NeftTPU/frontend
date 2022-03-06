@@ -1,28 +1,36 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { ThemeProvider } from '@mui/material'
+import { Box, ThemeProvider } from '@mui/material'
 
 import theme from './utils/theme'
-import { SCREENS } from './utils/routes'
+import { Pages } from './utils/routes'
 
 import Main from './pages/main/Main'
 import SignUp from './pages/signUp/SignUp'
 import Auth from './pages/auth/Auth'
 import NFTAppBar from './components/appbar/Appbar'
 import NFTFooter from './components/Footer'
+import ResetPassword from './pages/resetPassword/ResetPassword'
+import NewPassword from './pages/resetPassword/NewPassword'
+import UserGlobalStyles from './utils/UserGlobalStyles'
 
 
 ReactDOM.render(
     <React.StrictMode>
         <ThemeProvider theme={theme}>
+            <UserGlobalStyles theme={theme}/>
             <BrowserRouter>
                 <NFTAppBar/>
-                <Routes>
-                    <Route path={SCREENS.mainPage} element={<Main/>}/>
-                    <Route path={SCREENS.signUpPage} element={<SignUp/>}/>
-                    <Route path={SCREENS.authPage} element={<Auth/>}/>
-                </Routes>
+                <Box flex={1}>
+                    <Routes>
+                        <Route path={Pages.main} element={<Main/>}/>
+                        <Route path={Pages.signUp} element={<SignUp/>}/>
+                        <Route path={Pages.auth} element={<Auth/>}/>
+                        <Route path={Pages.resetPassword} element={<ResetPassword/>}/>
+                        <Route path={Pages.setNewPassword} element={<NewPassword/>}/>
+                    </Routes>
+                </Box>
                 <NFTFooter/>
             </BrowserRouter>
         </ThemeProvider>

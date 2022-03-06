@@ -1,27 +1,94 @@
 import * as React from 'react'
-import { useState } from 'react'
-import { AppBar, Avatar, Box, Button, Container, IconButton, Stack, Toolbar, Tooltip } from '@mui/material'
-import { SCREENS } from '../../utils/routes'
+import { useCallback, useState } from 'react'
+import {
+    AppBar,
+    Avatar,
+    Box,
+    Button,
+    Container,
+    IconButton, Link, Menu, MenuItem,
+    Stack, SvgIcon, Theme,
+    Toolbar,
+    Tooltip, Typography,
+    useMediaQuery,
+} from '@mui/material'
+import { Pages } from '../../utils/routes'
 import { useNavigate } from 'react-router-dom'
 import theme from '../../utils/theme'
-import rootStore from '../../stores/RootStore'
 import { observer } from 'mobx-react-lite'
+import stores from '../../stores/Stores'
+
+
+interface NavPage {
+    name: string
+    link: Pages
+}
+
+
+const navPages = [
+    {
+        name: 'GENERATOR',
+        link: Pages.main,
+    },
+    {
+        name: 'ABOUT US',
+        link: Pages.main,
+    },
+]
+
+const menuPages = [
+    {
+        name: 'Profile',
+        link: Pages.main,
+    },
+    {
+        name: 'Wallet',
+        link: Pages.main,
+    },
+    {
+        name: 'Generator',
+        link: Pages.main,
+    },
+    {
+        name: 'About us',
+        link: Pages.main,
+    },
+    {
+        name: 'Log out',
+        link: Pages.main,
+    },
+]
 
 
 const NFTAppBar = () => {
-    // const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null)
+    const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null)
     const navigate = useNavigate()
-    // const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    //     setAnchorElNav(event.currentTarget)
-    // }
-    //
-    // const handleCloseNavMenu = () => {
-    //     setAnchorElNav(null)
-    // }
+    const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
+
+    const handleOpenNavMenu = useCallback((event: React.MouseEvent<HTMLElement>) => {
+        setAnchorElNav(event.currentTarget)
+    }, [])
+
+    const handleCloseNavMenu = (link: Pages): void => {
+        setAnchorElNav(null)
+        navigate(link)
+    }
+
+    const navigateToMainPage = useCallback(() => {
+        navigate(Pages.main)
+    }, [navigate])
+
+    const navigateToAuthPage = useCallback(() => {
+        navigate(Pages.auth)
+    }, [navigate])
+
+    const navigateToSignUpPage = useCallback(() => {
+        navigate(Pages.signUp)
+    }, [navigate])
 
     return (
         <AppBar
-            position="static"
+            position={'static'}
             elevation={0}
             sx={{
                 background: 'linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(255,255,255,0) 100%)',
@@ -31,82 +98,154 @@ const NFTAppBar = () => {
                 },
             }}
         >
-            <Container maxWidth="lg">
+            <Container maxWidth={'lg'}>
                 <Toolbar disableGutters>
                     {/* Mobile centered logo */}
-                    <Container
+                    <Stack
+                        direction={'row'}
+                        alignItems={'center'}
                         sx={{
-                            flexGrow: 1,
-                            justifyContent: rootStore.appBarStore.isAuthorized ? 'center' : 'start',
-                            display: { xs: 'flex', md: 'none' },
+                            flexGrow: isMobile ? 1 : 0,
+                            cursor: 'pointer',
                         }}
-                        onClick={() => {
-                            navigate(SCREENS.mainPage, { replace: true })
-                        }}
+                        onClick={navigateToMainPage}
                     >
                         (logo)
-                    </Container>
+                        {
+                            stores.appBar.isAuthorized &&
+                            <Typography variant={'h6'} fontFamily={'Raleway'}>
+                                {' NFT GENERATOR'}
+                            </Typography>
+                        }
+                    </Stack>
 
-                    {/* Big screen logo */}
-                    <Container sx={{
-                        mx: 'auto',
-                        width: '10%',
-                        display: { xs: 'none', md: 'flex' },
-                    }}
-                               onClick={() => {
-                                   navigate(SCREENS.mainPage, { replace: true })
-                               }}
-                    >
-                        (logo)
-                    </Container>
-
+                    {/* Centered big screed navigation */}
+                    {
+                        !isMobile &&
+                        <Stack
+                            direction={'row'}
+                            alignItems={'center'}
+                            justifyContent={'center'}
+                            spacing={12}
+                            sx={{
+                                flexGrow: 1,
+                            }}
+                        >
+                            {
+                                navPages.map((page: NavPage) => (
+                                    <Link
+                                        key={page.name}
+                                        onClick={(): void => navigate(page.link)}
+                                        sx={{
+                                            my: 2,
+                                            color: 'white',
+                                            display: 'block',
+                                            cursor: 'pointer',
+                                        }}
+                                    >
+                                        <Typography>
+                                            {page.name}
+                                        </Typography>
+                                    </Link>
+                                ))
+                            }
+                        </Stack>
+                    }
 
                     {/* Profile pic for both pc and mobile*/}
                     <Box flexGrow={0}>
                         {
-                            rootStore.appBarStore.isAuthorized ?
-                                <Tooltip title="Профиль">
-                                    <IconButton sx={{ p: 0 }} href={SCREENS.mainPage}>
-                                        <Avatar alt="User's avatar"/>
-                                    </IconButton>
-                                </Tooltip>
+                            stores.appBar.isAuthorized ?
+                                <Box>
+                                    <Tooltip title={'Профиль'}>
+                                        <IconButton
+                                            sx={{ p: 0 }}
+                                            onClick={handleOpenNavMenu}
+                                            aria-label={'menu-mobile'}
+                                            aria-controls={'menu-appbar'}
+                                            aria-haspopup={'true'}
+                                        >
+                                            <Avatar alt={'User\'s avatar'}/>
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Menu
+                                        id={'menu-appbar'}
+                                        anchorEl={anchorElNav}
+                                        anchorOrigin={{
+                                            vertical: 'bottom',
+                                            horizontal: 'right',
+                                        }}
+                                        keepMounted
+                                        transformOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'right',
+                                        }}
+                                        open={Boolean(anchorElNav)}
+                                        onClose={handleCloseNavMenu}
+                                        sx={{
+                                            mt: 2,
+                                            '& .MuiMenu-list': {
+                                                background: (theme: Theme): string => theme.palette.primary.main,
+                                                border: '1px solid #554ADA',
+                                            },
+                                        }}
+                                    >
+                                        {
+                                            menuPages.map((page) => (
+                                                <MenuItem
+                                                    key={page.name}
+                                                    onClick={() => handleCloseNavMenu(page.link)}
+                                                    sx={{
+                                                        ':hover': { background: '#554ADA' },
+                                                    }}
+                                                >
+                                                    <Typography textAlign={'center'}>
+                                                        {page.name}
+                                                    </Typography>
+                                                </MenuItem>
+                                            ))
+                                        }
+                                    </Menu>
+                                </Box>
                                 :
                                 <Stack direction={'row'} spacing={1.5}>
                                     <Button
                                         variant={'outlined'}
-                                        onClick={rootStore.appBarStore.authorize}
+                                        onClick={navigateToAuthPage}
+                                        // onClick={() => stores.appBar.authorize()}
                                         sx={{
                                             color: 'white',
                                             borderColor: 'white',
                                             borderRadius: 1,
+                                            fontSize: '1rem',
                                             textTransform: 'none',
-                                            fontFamily: '"Montserrat", sans-serif',
+                                            fontFamily: '"Raleway", sans-serif',
                                             ':hover': {
                                                 borderColor: '#d5d4d4',
                                             },
                                         }}
                                     >
-                                        Вход
+                                        Sign In
                                     </Button>
                                     <Button
                                         variant={'contained'}
                                         disableElevation
-                                        onClick={() => console.log('bought')}
+                                        onClick={navigateToSignUpPage}
                                         sx={{
                                             background: '#554ADA',
                                             borderRadius: 1,
+                                            fontSize: '1rem',
                                             textTransform: 'none',
-                                            fontFamily: '"Montserrat", sans-serif',
+                                            fontFamily: '"Raleway", sans-serif',
                                             ':hover': {
                                                 background: '#5d53d9',
                                             },
                                         }}
                                     >
-                                        Регистрация
+                                        Sign Up
                                     </Button>
                                 </Stack>
                         }
-
                     </Box>
                 </Toolbar>
             </Container>
