@@ -4,4 +4,5 @@ export enum Pages {
     signUp = '/signUp',
     resetPassword = '/resetPassword',
     setNewPassword = '/resetPassword/new',
+    collections = '/collections'
 }
