@@ -7,4 +7,5 @@ export enum Errors {
     loginAlreadyExist,
     wrongPassword,
     termsDontAgreed,
+    nameAlreadyExist
 }
