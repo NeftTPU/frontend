@@ -27,6 +27,10 @@ interface NavPage {
 
 const navPages = [
     {
+        name: 'COLLECTIONS',
+        link: Pages.collections,
+    },
+    {
         name: 'GENERATOR',
         link: Pages.main,
     },

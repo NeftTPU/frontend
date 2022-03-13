@@ -3,6 +3,7 @@ import AppBarStore from '../components/appbar/AppBarStore'
 import AuthStore from '../pages/auth/AuthStore'
 import SignUpStore from '../pages/signUp/SignUpStore'
 import ResetPasswordStore from '../pages/resetPassword/ResetPasswordStore'
+import CollectionsStore from '../pages/collection/CollectionsStore'
 
 
 export class Stores {
@@ -11,6 +12,7 @@ export class Stores {
     readonly auth = new AuthStore()
     readonly signUp = new SignUpStore()
     readonly resetPassword = new ResetPasswordStore()
+    readonly collections = new CollectionsStore()
 }
 
 

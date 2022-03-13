@@ -14,6 +14,7 @@ import NFTFooter from './components/Footer'
 import ResetPassword from './pages/resetPassword/ResetPassword'
 import NewPassword from './pages/resetPassword/NewPassword'
 import UserGlobalStyles from './utils/UserGlobalStyles'
+import Collections from './pages/collection/Collections'
 
 
 ReactDOM.render(
@@ -29,6 +30,7 @@ ReactDOM.render(
                         <Route path={Pages.auth} element={<Auth/>}/>
                         <Route path={Pages.resetPassword} element={<ResetPassword/>}/>
                         <Route path={Pages.setNewPassword} element={<NewPassword/>}/>
+                        <Route path={Pages.collections} element={<Collections/>}/>
                     </Routes>
                 </Box>
                 <NFTFooter/>
