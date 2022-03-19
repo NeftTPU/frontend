@@ -4,3 +4,4 @@ export const AUTH_URL = BASE_URL + '/authentication'
 
 export const REGISTER_URL = AUTH_URL + '/register/'
 export const LOGIN_URL = AUTH_URL + '/login/'
+export const AUTH_USER_URL = AUTH_URL + '/user/'

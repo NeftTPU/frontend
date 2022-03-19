@@ -3,7 +3,7 @@ import { makeAutoObservable } from 'mobx'
 
 class AppBarStore {
 
-    isAuthorized = false
+    isAuthorized = !!localStorage.getItem('accessToken')
 
     constructor() {
         makeAutoObservable(this)
