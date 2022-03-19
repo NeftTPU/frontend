@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'

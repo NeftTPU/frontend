@@ -4,10 +4,14 @@ import AuthStore from '../pages/auth/AuthStore'
 import SignUpStore from '../pages/signUp/SignUpStore'
 import ResetPasswordStore from '../pages/resetPassword/ResetPasswordStore'
 import CollectionsStore from '../pages/collection/CollectionsStore'
+import { UserStore } from './UserStore'
+import { TokenStore } from './TokenStore'
 
 
-export class Stores {
+class Stores {
     readonly main = new MainStore()
+    readonly user = new UserStore()
+    readonly token = new TokenStore()
     readonly appBar = new AppBarStore()
     readonly auth = new AuthStore()
     readonly signUp = new SignUpStore()
@@ -16,5 +20,5 @@ export class Stores {
 }
 
 
-const rootStore = new Stores()
-export default rootStore
+const stores = new Stores()
+export default stores

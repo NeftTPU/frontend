@@ -1,30 +1,54 @@
-import { makeAutoObservable } from 'mobx'
-import Stores from '../../stores/Stores'
+import { makeAutoObservable, runInAction } from 'mobx'
+import stores from '../../stores/Stores'
+import { LOGIN_URL } from '../../utils/consts'
+import { plainToInstance } from 'class-transformer'
+import { Token } from '../../entities/Token'
+import { Status } from '../../utils/enums'
+import { http } from '../../utils/http'
 
 
 class AuthStore {
 
-    email = ''
+    login = ''
     password = ''
+    status: Status = 'none'
 
     constructor() {
         makeAutoObservable(this)
     }
 
-    updateEmail = (email: string): void => {
-        this.email = email
+    updateLogin = (login: string): void => {
+        this.login = login
     }
 
     updatePassword = (password: string): void => {
         this.password = password
     }
 
-    signIn = (): void => {
-        if (this.email === 'admin@ggnft.box' && this.password === 'root') {
-            Stores.appBar.authorize()
+    async auth() {
+        this.status = 'pending'
+        const authDto = {
+            username: this.login,
+            password: this.password,
+        }
+
+        try {
+            const data = await http.post<Token>(LOGIN_URL, authDto)
+            runInAction(() => {
+                const t = plainToInstance(Token, data.data, { excludeExtraneousValues: true })
+                stores.token.updateToken(t)
+                stores.appBar.authorize()
+                this.status = 'success'
+            })
+        } catch (e) {
+            runInAction(() => {
+                alert('Ошибка авторизации')
+                console.error(e)
+                this.status = 'error'
+            })
         }
     }
-
 }
+
 
 export default AuthStore

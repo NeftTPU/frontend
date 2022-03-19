@@ -12,8 +12,8 @@ class AppBarStore {
     authorize = () => {
         this.isAuthorized = true
     }
-    logout = () => this.isAuthorized = false
 
+    logout = () => this.isAuthorized = false
 }
 
 

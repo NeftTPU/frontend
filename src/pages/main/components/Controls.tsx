@@ -67,7 +67,7 @@ const Controls: FC = () => {
                     error={error === Errors.nameAlreadyExist}
                     inputMode={'text'}
                     onChange={(event): void =>
-                        stores.auth.updateEmail(event.target.value)}
+                        stores.auth.updateLogin(event.target.value)}
                     sx={{
                         '& .MuiInputBase-input': {
                             borderRadius: 1,

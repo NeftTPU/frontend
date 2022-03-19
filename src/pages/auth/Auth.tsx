@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react'
+import React, { FC, useCallback, useEffect, useState } from 'react'
 import { Box, Button, FormControl, IconButton, InputAdornment, InputLabel, Stack, Typography } from '@mui/material'
 import discord from '../../assets/icons/socialNetworks/discord.svg'
 import google from '../../assets/icons/socialNetworks/google.svg'
@@ -12,6 +12,7 @@ import { Pages } from '../../utils/routes'
 import { useNavigate } from 'react-router-dom'
 import { SocialNetworkLink } from '../../components/SocialNetworkLink'
 import { Errors } from '../../utils/enums'
+import { observer } from 'mobx-react-lite'
 
 
 const Auth: FC = () => {
@@ -29,30 +30,6 @@ const Auth: FC = () => {
         event.preventDefault()
     }
 
-    const handleSignIn = useCallback(() => {
-        const isEmail = stores.auth.email
-            .toLowerCase()
-            .match(
-                // eslint-disable-next-line max-len
-                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            )
-        if (!isEmail) {
-            setError(Errors.incorrectEmail)
-        } else {
-            // if (smth) {
-            //     // if email doesnt exist
-            //     setError(Errors.nonExistentEmail)
-            // }
-            if (stores.auth.password !== 'root') {
-                setError(Errors.wrongPassword)
-            } else {
-                stores.auth.signIn()
-                navigate(Pages.main)
-            }
-
-        }
-    }, [navigate])
-
     const handleSignUp = useCallback(() => {
         navigate(Pages.signUp)
     }, [navigate])
@@ -64,6 +41,39 @@ const Auth: FC = () => {
     const resetError = useCallback(() => {
         setError(null)
     }, [])
+
+    const handleSignIn = useCallback(() => {
+
+        function checkLogin(): boolean {
+            if (stores.auth.login.length === 0) {
+                setError(Errors.incorrectLogin)
+                return false
+            } else {
+                resetError()
+                return true
+            }
+        }
+
+        function checkPassword(): boolean {
+            if (stores.auth.password.length === 0) {
+                setError(Errors.wrongPassword)
+                return false
+            } else {
+                resetError()
+                return true
+            }
+        }
+
+        const check = checkLogin() && checkPassword()
+
+        if (check) {
+            void stores.auth.auth()
+        }
+    }, [navigate])
+
+    if (stores.auth.status === 'success') {
+        navigate(Pages.main)
+    }
 
     return (
         <Box
@@ -84,7 +94,7 @@ const Auth: FC = () => {
             >
                 <FormControl
                     variant={'standard'}
-                    error={error === Errors.incorrectEmail || error === Errors.nonExistentEmail}
+                    error={error === Errors.incorrectLogin || error === Errors.nonExistentLogin}
                     onFocus={resetError}
                     sx={{
                         mt: 1,
@@ -92,7 +102,7 @@ const Auth: FC = () => {
                 >
                     <InputLabel
                         shrink
-                        htmlFor={'email-input'}
+                        htmlFor={'login-input'}
                         sx={{
                             fontSize: '1.5rem',
                             pl: 1,
@@ -101,18 +111,17 @@ const Auth: FC = () => {
                             },
                         }}
                     >
-                        Email
+                        Login
                     </InputLabel>
                     <GGInputBase
-                        id={'email-input'}
+                        id={'login-input'}
                         autoFocus
-                        error={error === Errors.incorrectEmail || error === Errors.nonExistentEmail}
-                        inputMode={'email'}
+                        error={error === Errors.incorrectLogin || error === Errors.nonExistentLogin}
                         onChange={(event): void =>
-                            stores.auth.updateEmail(event.target.value)}
+                            stores.auth.updateLogin(event.target.value)}
                     />
                     {
-                        error === Errors.incorrectEmail &&
+                        error === Errors.incorrectLogin &&
                         <Typography
                             variant={'body1'}
                             sx={{
@@ -120,11 +129,11 @@ const Auth: FC = () => {
                                 textAlign: 'end',
                             }}
                         >
-                            Incorrect email
+                            Incorrect login
                         </Typography>
                     }
                     {
-                        error === Errors.nonExistentEmail &&
+                        error === Errors.nonExistentLogin &&
                         <Typography
                             variant={'body2'}
                             sx={{
@@ -132,7 +141,7 @@ const Auth: FC = () => {
                                 textAlign: 'end',
                             }}
                         >
-                            This email does not have an existing account
+                            This login does not have an existing account
                         </Typography>
                     }
                 </FormControl>
@@ -141,7 +150,7 @@ const Auth: FC = () => {
                     error={error === Errors.wrongPassword}
                     onFocus={resetError}
                     onKeyDown={(event): void => {
-                        if(event.code === 'Enter') {
+                        if (event.code === 'Enter') {
                             handleSignIn()
                         }
                     }}
@@ -298,4 +307,4 @@ const Auth: FC = () => {
     )
 }
 
-export default Auth
+export default observer(Auth)

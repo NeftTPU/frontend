@@ -1,5 +1,16 @@
 import React, { FC, useCallback, useState } from 'react'
-import { Box, Button, Checkbox, FormControl, FormControlLabel, IconButton, InputAdornment, InputLabel, Stack, Typography } from '@mui/material'
+import {
+    Box,
+    Button,
+    Checkbox,
+    FormControl,
+    FormControlLabel,
+    IconButton,
+    InputAdornment,
+    InputLabel,
+    Stack,
+    Typography,
+} from '@mui/material'
 import discord from '../../assets/icons/socialNetworks/discord.svg'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
@@ -12,6 +23,8 @@ import { useNavigate } from 'react-router-dom'
 import google from '../../assets/icons/socialNetworks/google.svg'
 import twitch from '../../assets/icons/socialNetworks/twitch.svg'
 import { Errors } from '../../utils/enums'
+import { isEmail } from 'class-validator'
+import { observer } from 'mobx-react-lite'
 
 
 const SignUp: FC = () => {
@@ -53,55 +66,58 @@ const SignUp: FC = () => {
     }, [])
 
     const handleSignUp = useCallback(() => {
-        const checkLogin = (): void => {
+        const checkLogin = (): boolean => {
             if (stores.signUp.login === '') {
                 setLoginError(Errors.loginAlreadyExist)
+                return false
             } else {
-                setLoginError(null)
+                resetLoginError()
+                return true
             }
         }
 
-        const checkEmail = (): void => {
-            const isEmail = stores.signUp.email
-                .toLowerCase()
-                .match(
-                    // eslint-disable-next-line max-len
-                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                )
-            if (!isEmail) {
+        const checkEmail = (): boolean => {
+            if (!isEmail(stores.signUp.email)) {
                 setEmailError(Errors.incorrectEmail)
+                return false
             } else {
-                // if (smth) {
-                //     // if email doesnt exist
-                //     setError(Errors.nonExistentEmail)
-                // }
-                setEmailError(null)
+                resetEmailError()
+                return true
             }
         }
 
-        const checkPasswords = (): void => {
+        const checkPasswords = (): boolean => {
             if (stores.signUp.password.length < 8) {
                 setPasswordError(Errors.weakPassword)
             } else if (stores.signUp.password !== stores.signUp.repeatPassword) {
                 setPasswordError(Errors.passwordsDontMatch)
             } else {
-                setPasswordError(null)
+                resetPasswordError()
+                return true
             }
+            return true
         }
 
-        const checkTerms = (): void => {
+        const checkTerms = (): boolean => {
             if (!checked) {
                 setTermsError(Errors.termsDontAgreed)
+                return false
             } else {
+                resetTermsError()
                 setTermsError(null)
+                return true
             }
         }
 
-        checkLogin()
-        checkEmail()
-        checkPasswords()
-        checkTerms()
+        const check = checkLogin() && checkEmail() && checkPasswords() && checkTerms()
+        if (check) {
+            void stores.signUp.register()
+        }
     }, [checked])
+
+    if (stores.signUp.status === 'success') {
+        navigate(Pages.auth)
+    }
 
     const handleTermsCheck = useCallback(() => {
         setChecked((prevState) => !prevState)
@@ -288,7 +304,7 @@ const SignUp: FC = () => {
                     error={passwordError !== null}
                     onFocus={resetPasswordError}
                     onKeyDown={(event): void => {
-                        if(event.code === 'Enter') {
+                        if (event.code === 'Enter') {
                             handleSignUp()
                         }
                     }}
@@ -447,4 +463,4 @@ const SignUp: FC = () => {
     )
 }
 
-export default SignUp
+export default observer(SignUp)
