@@ -23,8 +23,7 @@ const injectToken = (config: AxiosRequestConfig): AxiosRequestConfig => {
         const token = localStorage.getItem('accessToken')
 
         if (token != null && config.headers) {
-            console.log('headerx')
-            config.headers.Authorization = `Bearer ${token}`
+            config.headers.Authorization = `Token ${token}`
         }
         return config
     } catch (error) {

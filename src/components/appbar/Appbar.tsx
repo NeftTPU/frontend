@@ -6,10 +6,15 @@ import {
     Box,
     Button,
     Container,
-    IconButton, Link, Menu, MenuItem,
-    Stack, SvgIcon, Theme,
+    IconButton,
+    Link,
+    Menu,
+    MenuItem,
+    Stack,
+    Theme,
     Toolbar,
-    Tooltip, Typography,
+    Tooltip,
+    Typography,
     useMediaQuery,
 } from '@mui/material'
 import { Pages } from '../../utils/routes'
@@ -27,10 +32,6 @@ interface NavPage {
 
 const navPages = [
     {
-        name: 'COLLECTIONS',
-        link: Pages.collections,
-    },
-    {
         name: 'GENERATOR',
         link: Pages.main,
     },
@@ -42,12 +43,8 @@ const navPages = [
 
 const menuPages = [
     {
-        name: 'Profile',
-        link: Pages.main,
-    },
-    {
-        name: 'Wallet',
-        link: Pages.main,
+        name: 'Collections',
+        link: Pages.collections,
     },
     {
         name: 'Generator',
@@ -59,10 +56,14 @@ const menuPages = [
     },
     {
         name: 'Log out',
+        onClick: () => {
+            void stores.appBar.logout()
+            void stores.token.clearToken()
+            window.location.reload()
+        },
         link: Pages.main,
     },
 ]
-
 
 const NFTAppBar = () => {
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null)
@@ -198,7 +199,7 @@ const NFTAppBar = () => {
                                             menuPages.map((page) => (
                                                 <MenuItem
                                                     key={page.name}
-                                                    onClick={() => handleCloseNavMenu(page.link)}
+                                                    onClick={page?.onClick ?? (() => handleCloseNavMenu(page.link))}
                                                     sx={{
                                                         ':hover': { background: '#554ADA' },
                                                     }}

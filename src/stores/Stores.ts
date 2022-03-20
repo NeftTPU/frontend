@@ -10,9 +10,9 @@ import { TokenStore } from './TokenStore'
 
 class Stores {
     readonly main = new MainStore()
-    readonly user = new UserStore()
     readonly token = new TokenStore()
-    readonly appBar = new AppBarStore()
+    readonly user = new UserStore(this.token)
+    readonly appBar = new AppBarStore(this.token)
     readonly auth = new AuthStore()
     readonly signUp = new SignUpStore()
     readonly resetPassword = new ResetPasswordStore()

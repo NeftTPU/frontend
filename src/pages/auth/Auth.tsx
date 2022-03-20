@@ -71,9 +71,12 @@ const Auth: FC = () => {
         }
     }, [navigate])
 
-    if (stores.auth.status === 'success') {
-        navigate(Pages.main)
-    }
+    useEffect(() => {
+        if (stores.auth.status === 'success') {
+            navigate(Pages.main)
+        }
+    }, [stores.auth.status])
+
 
     return (
         <Box

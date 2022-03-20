@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react'
+import React, { FC, useCallback, useEffect, useState } from 'react'
 import {
     Box,
     Button,
@@ -115,9 +115,11 @@ const SignUp: FC = () => {
         }
     }, [checked])
 
-    if (stores.signUp.status === 'success') {
-        navigate(Pages.auth)
-    }
+    useEffect(() => {
+        if (stores.signUp.status === 'success') {
+            navigate(Pages.auth)
+        }
+    }, [stores.signUp.status])
 
     const handleTermsCheck = useCallback(() => {
         setChecked((prevState) => !prevState)

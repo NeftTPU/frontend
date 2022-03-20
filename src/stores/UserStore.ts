@@ -1,14 +1,15 @@
 import { User } from '../entities/User'
 import { makeAutoObservable, runInAction } from 'mobx'
 import { http } from '../utils/http'
-import { REGISTER_URL } from '../utils/consts'
+import { AUTH_USER_URL } from '../utils/consts'
 import { plainToInstance } from 'class-transformer'
+import { TokenStore } from './TokenStore'
 
 
 export class UserStore {
     user?: User
 
-    constructor() {
+    constructor(private tokenStore: TokenStore) {
         makeAutoObservable(this)
         void this.getUser()
     }
@@ -18,12 +19,13 @@ export class UserStore {
     }
 
     private async getUser() {
-        if (!localStorage.getItem('accessToken')) {
+        if (!this.tokenStore.hasToken) {
             return
         }
         try {
-            const data = await http.get<User>(REGISTER_URL)
+            const data = await http.get<User>(AUTH_USER_URL)
             runInAction(() => {
+                console.log(data.data)
                 this.user = plainToInstance(User, data.data, { excludeExtraneousValues: true })
             })
         } catch (e) {
