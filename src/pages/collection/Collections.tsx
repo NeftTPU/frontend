@@ -34,7 +34,7 @@ const Collections = () => {
             <Container maxWidth={'md'}>
                 <Box display={'flex'} alignItems={'flex-start'} justifyContent={'space-between'}>
                     <Typography variant={'h5'} mb={2}>
-                        Мои коллекции
+                        My collections
                     </Typography>
                     <Button
                         onClick={handleNewItem}
@@ -48,7 +48,7 @@ const Collections = () => {
                         }}
                         startIcon={<AddRounded/>}
                     >
-                        Добавить
+                        Add
                     </Button>
                 </Box>
                 <Box mx={4}>
@@ -76,7 +76,7 @@ const Collections = () => {
                                                         },
                                                     }}
                                                 >
-                                                    Открыть
+                                                    Open
                                                 </Button>
                                                 <Button
                                                     variant={'outlined'}
@@ -91,7 +91,7 @@ const Collections = () => {
                                                         },
                                                     }}
                                                 >
-                                                    Удалить
+                                                    Remove
                                                 </Button>
                                             </Grid>
                                         </Grid>

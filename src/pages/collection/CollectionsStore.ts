@@ -12,11 +12,11 @@ class CollectionsStore {
     collections: Collection[] = [
         {
             id: '1',
-            name: 'Коллекция 1',
+            name: 'Test Collection 1',
         },
         {
             id: '2',
-            name: 'Коллекция 2',
+            name: 'Test Collection 2',
         },
     ]
 
