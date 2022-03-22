@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { BASE_URL } from './consts'
+import { API_URL, BASE_URL } from './consts'
 
 
 enum StatusCode {
@@ -44,6 +44,8 @@ class Http {
             baseURL: BASE_URL,
             headers,
             withCredentials: true,
+            xsrfHeaderName: 'X-CSRFToken',
+            xsrfCookieName: 'csrftoken'
         })
 
         http.interceptors.request.use(injectToken, (error) => Promise.reject(error))
@@ -118,3 +120,12 @@ class Http {
 
 
 export const http = new Http()
+
+// async function f() {
+//     console.log('== START ==')
+//     const t = await http.get(API_URL + '/collections')
+//     console.log(t)
+//     console.log('== STOP ==')
+// }
+//
+// f()
