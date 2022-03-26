@@ -67,7 +67,10 @@ const Controls: FC<ControlsProps> = ({ handleDeleteImage, handleRefetchLayers, h
                                                     if (event.target.files !== null) {
                                                         stores.main.setCurrentImage(neftImage)
                                                         stores.main.uploadImageFileAndPath(event.target.files[0])
-                                                        handleOpenSnackbar('addImage')
+                                                            .then(() => {
+                                                                handleRefetchLayers()
+                                                                handleOpenSnackbar('addImage')
+                                                            })
                                                     }
                                                 }}
                                                 style={{
