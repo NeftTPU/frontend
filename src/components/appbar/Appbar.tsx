@@ -115,11 +115,10 @@ const NFTAppBar = () => {
                         }}
                         onClick={navigateToMainPage}
                     >
-                        (logo)
                         {
                             stores.appBar.isAuthorized &&
                             <Typography variant={'h6'} fontFamily={'Raleway'}>
-                                {' NFT GENERATOR'}
+                                {'NFT GENERATOR'}
                             </Typography>
                         }
                     </Stack>

@@ -12,4 +12,5 @@ export enum Errors {
     nameAlreadyExist
 }
 
+
 export type Status = 'success' | 'error' | 'pending' | 'none'

@@ -1,126 +1,170 @@
-import React, { FC, useCallback, useState } from 'react'
-import { Box, Button, FormControl, IconButton, InputLabel, Stack, Typography } from '@mui/material'
-import { Errors } from '../../../utils/enums'
-import { GGInputBase } from '../../../components/GGInputBase'
+import React, { FC } from 'react'
+import { Box, IconButton, List, ListItem, Stack, Typography } from '@mui/material'
 import stores from '../../../stores/Stores'
 import FileUploadIcon from '@mui/icons-material/FileUpload'
 import Visibility from '@mui/icons-material/Visibility'
 import DeleteIcon from '@mui/icons-material/Delete'
-import theme from '../../../utils/theme'
-import AddIcon from '@mui/icons-material/Add'
+import { observer } from 'mobx-react-lite'
 
 
-const Varitant: FC = () => {
-
-    return (
-        <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-            <Typography variant={'body1'}>
-                Layer
-            </Typography>
-            <Box>
-                <IconButton>
-                    <FileUploadIcon sx={{ color: 'white' }}/>
-                </IconButton>
-                <IconButton>
-                    <Visibility sx={{ color: 'white' }}/>
-                </IconButton>
-                <IconButton>
-                    <DeleteIcon sx={{ color: 'white' }}/>
-                </IconButton>
-            </Box>
-        </Stack>
-    )
+interface ControlsProps {
+    handleOpenSnackbar(from: string): void
+    handleDeleteImage(id: number): void
+    handleRefetchLayers(): void
 }
 
-const Controls: FC = () => {
 
-    const [error, setError] = useState<Errors | null>(null)
-
-    const resetError = useCallback(() => {
-        setError(null)
-    }, [])
+const Controls: FC<ControlsProps> = ({ handleDeleteImage, handleRefetchLayers, handleOpenSnackbar }) => {
 
     return (
-        <Box py={1} px={2} position={'relative'}>
-            <FormControl
-                variant={'standard'}
-                error={error === Errors.nameAlreadyExist}
-                onFocus={resetError}
-                sx={{
-                    mt: 1,
-                }}
-            >
-                <InputLabel
-                    shrink
-                    sx={{
-                        fontSize: '1.25rem',
-                        pl: 1,
-                        '&.Mui-focused': {
-                            color: 'white',
-                        },
-                    }}
-                >
-                    New variant
-                </InputLabel>
-                <GGInputBase
-                    autoFocus
-                    error={error === Errors.nameAlreadyExist}
-                    inputMode={'text'}
-                    onChange={(event): void =>
-                        stores.auth.updateLogin(event.target.value)}
-                    sx={{
-                        '& .MuiInputBase-input': {
-                            borderRadius: 1,
-                            border: (error) ? '1px solid #f00' : '1px solid #fff',
-                            backgroundColor: 'transparent',
-                            position: 'relative',
-                            boxSizing: 'border-box',
-                            fontSize: 12,
-                            height: 36,
-                            color: 'white',
-                            width: 250,
-                            maxWidth: '85vw',
-                            padding: '10px 12px',
-                            transition: theme.transitions.create([
-                                'border-width',
-                            ]),
-                            '&:focus': {
-                                border: '1.5px solid #fff',
-                            },
-                        },
-                    }}
-                />
+        <Box
+            px={2}
+            position={'relative'}
+            sx={{
+                overflowY: 'scroll',
+                height: '100%',
+            }}
+        >
+            <List>
+                {/* Local, not sended */}
                 {
-                    error === Errors.nameAlreadyExist &&
-                    <Typography
-                        variant={'body2'}
-                        sx={{
-                            color: '#f00',
-                            textAlign: 'end',
-                        }}
-                    >
-                        Layer with this name is already exist
-                    </Typography>
+                    stores.main.images &&
+                    stores.main.images
+                        .map((neftImage) =>
+                            <ListItem
+                                disablePadding
+                                key={stores.main.currentLayer?.id.toString() + neftImage.id.toString()}
+                                sx={{
+                                    borderBottom: '1px solid #fff',
+                                    py: 0.5,
+                                    width: '100%',
+                                }}
+                            >
+                                <Stack
+                                    direction={'row'}
+                                    alignItems={'center'}
+                                    justifyContent={'space-between'}
+                                    sx={{
+                                        width: '100%',
+                                    }}
+                                >
+                                    <Typography
+                                        variant={'body1'}
+                                        sx={{
+                                            color: neftImage?.file || neftImage.image?.file ? 'white' : 'red',
+                                        }}
+                                    >
+                                        {neftImage.title}
+                                    </Typography>
+                                    <Box>
+                                        <label htmlFor={'uploadImage' + neftImage.id.toString()}>
+                                            <input
+                                                id={'uploadImage' + neftImage.id.toString()}
+                                                accept={'image/png'}
+                                                type={'file'}
+                                                onChange={(event): void => {
+                                                    console.log(neftImage.title)
+                                                    if (event.target.files !== null) {
+                                                        stores.main.setCurrentImage(neftImage)
+                                                        stores.main.uploadImageFileAndPath(event.target.files[0])
+                                                        handleOpenSnackbar('addImage')
+                                                    }
+                                                }}
+                                                style={{
+                                                    display: 'none',
+                                                }}
+                                            />
+                                            <IconButton component={'span'}>
+                                                <FileUploadIcon sx={{ color: 'white' }}/>
+                                            </IconButton>
+                                        </label>
+                                        <IconButton
+                                            onClick={() => stores.main.setCurrentImage(neftImage)}
+                                        >
+                                            <Visibility sx={{ color: 'white' }}/>
+                                        </IconButton>
+                                        <IconButton
+                                            onClick={() => {
+                                                handleDeleteImage(neftImage.id)
+                                                handleOpenSnackbar('deleteImage')
+                                            }}
+                                        >
+                                            <DeleteIcon sx={{ color: 'white' }}/>
+                                        </IconButton>
+                                    </Box>
+                                </Stack>
+                            </ListItem>)
                 }
-            </FormControl>
 
-            <Box
-                position={'absolute'}
-                right={'15%'}
-                top={32}
-            >
-                <IconButton size={'large'}>
-                    <AddIcon sx={{ color: 'white' }}/>
-                </IconButton>
-            </Box>
-
-            <Box mt={4}>
-                <Varitant/>
-                <Varitant/>
-                <Varitant/>
-            </Box>
+                {/* From server*/}
+                {
+                    stores.main.currentLayer && stores.main.currentLayer.layer_set &&
+                    stores.main.currentLayer.layer_set
+                        .map((neftImage) =>
+                            <ListItem
+                                disablePadding
+                                key={stores.main.currentLayer?.id.toString() + neftImage.id.toString()}
+                                sx={{
+                                    borderBottom: '1px solid #fff',
+                                    py: 0.5,
+                                    width: '100%',
+                                }}
+                            >
+                                <Stack
+                                    direction={'row'}
+                                    alignItems={'center'}
+                                    justifyContent={'space-between'}
+                                    sx={{
+                                        width: '100%',
+                                    }}
+                                >
+                                    <Typography
+                                        variant={'body1'}
+                                        sx={{
+                                            color: neftImage?.file || neftImage.image?.file ? 'white' : 'red',
+                                        }}
+                                    >
+                                        {neftImage.title}
+                                    </Typography>
+                                    <Box>
+                                        <label htmlFor={'uploadImage' + neftImage.id.toString()}>
+                                            <input
+                                                id={'uploadImage' + neftImage.id.toString()}
+                                                accept={'image/png'}
+                                                type={'file'}
+                                                onChange={(event): void => {
+                                                    console.log(neftImage.title)
+                                                    if (event.target.files !== null) {
+                                                        stores.main.setCurrentImage(neftImage)
+                                                        stores.main.uploadImageFileAndPath(event.target.files[0])
+                                                        handleRefetchLayers()
+                                                    }
+                                                }}
+                                                style={{
+                                                    display: 'none',
+                                                }}
+                                            />
+                                            <IconButton component={'span'}>
+                                                <FileUploadIcon sx={{ color: 'white' }}/>
+                                            </IconButton>
+                                        </label>
+                                        <IconButton
+                                            onClick={() => stores.main.setCurrentImage(neftImage)}
+                                        >
+                                            <Visibility sx={{ color: 'white' }}/>
+                                        </IconButton>
+                                        <IconButton
+                                            onClick={() => handleDeleteImage(neftImage.id)}
+                                        >
+                                            <DeleteIcon sx={{ color: 'white' }}/>
+                                        </IconButton>
+                                    </Box>
+                                </Stack>
+                            </ListItem>)
+                }
+            </List>
         </Box>
     )
 }
 
-export default Controls
+export default observer(Controls)

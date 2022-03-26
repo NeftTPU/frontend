@@ -138,7 +138,7 @@ const NewPassword: FC = () => {
                         onChange={(event): void =>
                             stores.resetPassword.setPasswordRepeat(event.target.value)}
                         onKeyDown={(event): void => {
-                            if(event.code === 'Enter') {
+                            if (event.code === 'Enter') {
                                 handleChangePassword()
                             }
                         }}
@@ -176,7 +176,7 @@ const NewPassword: FC = () => {
                                 textAlign: 'end',
                             }}
                         >
-                            {"Passwords don't match"}
+                            {'Passwords don\'t match'}
                         </Typography>
                     }
                 </FormControl>

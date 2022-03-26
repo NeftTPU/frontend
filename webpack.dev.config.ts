@@ -57,7 +57,7 @@ const config: DevConfig = {
                 use: {
                     loader: 'file-loader',
                     options: {
-                        name: '[name].[ext]',
+                        name: '[title].[ext]',
                     },
                 }
             },

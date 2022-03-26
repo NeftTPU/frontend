@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { API_URL, BASE_URL } from './consts'
+import { BASE_URL } from './consts'
 
 
 enum StatusCode {
@@ -45,7 +45,7 @@ class Http {
             headers,
             withCredentials: true,
             xsrfHeaderName: 'X-CSRFToken',
-            xsrfCookieName: 'csrftoken'
+            xsrfCookieName: 'csrftoken',
         })
 
         http.interceptors.request.use(injectToken, (error) => Promise.reject(error))
@@ -91,6 +91,19 @@ class Http {
     }
 
     // Handle global app errors
+
+    getCookie = (cname: string): string => {
+        var cookies = ` ${document.cookie}`.split(';')
+        var val = ''
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].split('=')
+            if (cookie[0] == ` ${cname}`) {
+                return cookie[1]
+            }
+        }
+        return ''
+    }
+
     // We can handle generic app errors depending on the status code
     private handleError(error) {
         const { status } = error

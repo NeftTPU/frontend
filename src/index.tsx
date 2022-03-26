@@ -16,26 +16,34 @@ import ResetPassword from './pages/resetPassword/ResetPassword'
 import NewPassword from './pages/resetPassword/NewPassword'
 import UserGlobalStyles from './utils/UserGlobalStyles'
 import Collections from './pages/collection/Collections'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
+import { ReactQueryDevtools } from 'react-query/devtools'
+
+
+const queryClient = new QueryClient()
 
 ReactDOM.render(
     <React.StrictMode>
         <ThemeProvider theme={theme}>
-            <UserGlobalStyles theme={theme}/>
-            <BrowserRouter>
-                <NFTAppBar/>
-                <Box flex={1}>
-                    <Routes>
-                        <Route path={Pages.main} element={<Main/>}/>
-                        <Route path={Pages.signUp} element={<SignUp/>}/>
-                        <Route path={Pages.auth} element={<Auth/>}/>
-                        <Route path={Pages.resetPassword} element={<ResetPassword/>}/>
-                        <Route path={Pages.setNewPassword} element={<NewPassword/>}/>
-                        <Route path={Pages.collections} element={<Collections/>}/>
-                    </Routes>
-                </Box>
-                <NFTFooter/>
-            </BrowserRouter>
+            <QueryClientProvider client={queryClient}>
+                <UserGlobalStyles theme={theme}/>
+                <BrowserRouter>
+                    <NFTAppBar/>
+                    <Box flex={1}>
+                        <Routes>
+                            <Route path={Pages.main} element={<Main/>}/>
+                            <Route path={Pages.signUp} element={<SignUp/>}/>
+                            <Route path={Pages.auth} element={<Auth/>}/>
+                            <Route path={Pages.resetPassword} element={<ResetPassword/>}/>
+                            <Route path={Pages.setNewPassword} element={<NewPassword/>}/>
+                            <Route path={Pages.collections} element={<Collections/>}/>
+                        </Routes>
+                    </Box>
+                    <NFTFooter/>
+                    <ReactQueryDevtools/>
+                </BrowserRouter>
+            </QueryClientProvider>
         </ThemeProvider>
     </React.StrictMode>,
     document.getElementById('root'),

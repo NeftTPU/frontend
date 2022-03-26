@@ -34,6 +34,7 @@ class AuthStore {
 
         try {
             const data = await http.post<Token>(LOGIN_URL, authDto)
+            console.log(data)
             runInAction(() => {
                 const t = plainToInstance(Token, data.data, { excludeExtraneousValues: true })
                 stores.token.updateToken(t)

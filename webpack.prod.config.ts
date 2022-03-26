@@ -9,7 +9,7 @@ const config: Configuration = {
     entry: './src/index.tsx',
     output: {
         path: path.resolve(__dirname, 'build'),
-        filename: '[name].[contenthash].js',
+        filename: '[title].[contenthash].js',
         publicPath: '',
     },
     module: {
@@ -47,7 +47,7 @@ const config: Configuration = {
                 use: {
                     loader: 'file-loader',
                     options: {
-                        name: '[name].[ext]',
+                        name: '[title].[ext]',
                     },
                 }
             },

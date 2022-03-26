@@ -77,7 +77,6 @@ const Auth: FC = () => {
         }
     }, [stores.auth.status])
 
-
     return (
         <Box
             overflow={'hidden'}

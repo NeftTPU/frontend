@@ -24,6 +24,10 @@ export class TokenStore {
         }
     }
 
+    get hasToken(): boolean {
+        return !!this.token
+    }
+
     updateToken(token: Token) {
         localStorage.setItem('accessToken', token.token)
         const expiry = token.expiry
@@ -37,9 +41,5 @@ export class TokenStore {
         localStorage.removeItem('accessToken')
         localStorage.removeItem('expiry')
         this.token = undefined
-    }
-
-    get hasToken(): boolean {
-        return !!this.token
     }
 }

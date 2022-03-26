@@ -68,7 +68,7 @@ const ResetPassword: FC = () => {
                     variant={'standard'}
                     error={error !== null}
                     onKeyDown={(event): void => {
-                        if(event.code === 'Enter') {
+                        if (event.code === 'Enter') {
                             handleReset()
                         }
                     }}
