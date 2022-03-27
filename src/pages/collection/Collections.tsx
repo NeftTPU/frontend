@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Box, Button, Container, createTheme, Divider, Grid, Stack, ThemeProvider, Typography } from '@mui/material'
 import { observer } from 'mobx-react-lite'
 import stores from '../../stores/Stores'
-import { AddRounded } from '@mui/icons-material'
+import CollectionDialog from './CollectionDialog'
 
 
 const newTheme = createTheme({
@@ -20,6 +20,10 @@ const newTheme = createTheme({
 })
 
 const Collections = () => {
+
+    useEffect(() => {
+        void stores.collections.getCollections()
+    }, [])
 
     return (
         <ThemeProvider theme={newTheme}>
@@ -44,6 +48,7 @@ const Collections = () => {
                                             <Grid item xs sx={{ textAlign: 'end' }}>
                                                 <Button
                                                     variant={'outlined'}
+                                                    onClick={() => stores.collections.open(el.id)}
                                                     sx={{
                                                         color: 'white',
                                                         borderColor: 'white',
@@ -66,6 +71,7 @@ const Collections = () => {
                     </Stack>
                 </Box>
             </Container>
+            <CollectionDialog/>
         </ThemeProvider>
     )
 }

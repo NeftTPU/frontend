@@ -3,7 +3,8 @@ import { Expose, Type } from 'class-transformer'
 
 export class Collection {
     @Expose()
-    id: string
+    @Type(() => Number)
+    id: number
 
     @Expose()
     title: string

@@ -4,23 +4,28 @@ import { COLLECTION_URL } from '../../utils/consts'
 import { plainToInstance } from 'class-transformer'
 import { Collection } from '../../entities/Collection'
 import { TokenStore } from '../../stores/TokenStore'
+import CollectionDialogStore from './CollectionDialogStore'
 
 
 class CollectionsStore {
 
     collections: Collection[] = []
 
-    constructor(private readonly tokenStore: TokenStore) {
+    constructor(
+        private readonly tokenStore: TokenStore,
+        private readonly dialogStore: CollectionDialogStore,
+    ) {
         makeAutoObservable(this)
-        void this.getCollections()
     }
 
-    private async getCollections() {
-        console.log('101010')
+    open(collectionId: number) {
+        void this.dialogStore.setCollectionAndOpenDialog(collectionId)
+    }
+
+    async getCollections() {
         if (!this.tokenStore.hasToken) {
             return
         }
-        console.log('202')
         try {
             let { data } = await http.get<Collection[]>(COLLECTION_URL)
             runInAction(() => {

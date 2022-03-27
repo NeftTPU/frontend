@@ -6,6 +6,7 @@ import ResetPasswordStore from '../pages/resetPassword/ResetPasswordStore'
 import CollectionsStore from '../pages/collection/CollectionsStore'
 import { UserStore } from './UserStore'
 import { TokenStore } from './TokenStore'
+import CollectionDialogStore from '../pages/collection/CollectionDialogStore'
 
 
 class Stores {
@@ -16,7 +17,8 @@ class Stores {
     readonly auth = new AuthStore()
     readonly signUp = new SignUpStore()
     readonly resetPassword = new ResetPasswordStore()
-    readonly collections = new CollectionsStore(this.token)
+    readonly collectionDialog = new CollectionDialogStore()
+    readonly collections = new CollectionsStore(this.token, this.collectionDialog)
 }
 
 
