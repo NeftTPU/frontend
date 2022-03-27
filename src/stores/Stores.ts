@@ -16,7 +16,7 @@ class Stores {
     readonly auth = new AuthStore()
     readonly signUp = new SignUpStore()
     readonly resetPassword = new ResetPasswordStore()
-    readonly collections = new CollectionsStore()
+    readonly collections = new CollectionsStore(this.token)
 }
 
 

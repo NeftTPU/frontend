@@ -35,24 +35,12 @@ const navPages = [
         name: 'GENERATOR',
         link: Pages.main,
     },
-    {
-        name: 'ABOUT US',
-        link: Pages.main,
-    },
 ]
 
 const menuPages = [
     {
         name: 'Collections',
         link: Pages.collections,
-    },
-    {
-        name: 'Generator',
-        link: Pages.main,
-    },
-    {
-        name: 'About us',
-        link: Pages.main,
     },
     {
         name: 'Log out',

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Box, Button, Container, createTheme, Divider, Grid, Stack, ThemeProvider, Typography } from '@mui/material'
 import { observer } from 'mobx-react-lite'
 import stores from '../../stores/Stores'
@@ -21,14 +21,6 @@ const newTheme = createTheme({
 
 const Collections = () => {
 
-    function handleNewItem() {
-        const i = Math.floor(Math.random() * 100)
-        stores.collections.add({
-            id: '' + i,
-            name: 'NEW Collection ' + i,
-        })
-    }
-
     return (
         <ThemeProvider theme={newTheme}>
             <Container maxWidth={'md'}>
@@ -36,31 +28,17 @@ const Collections = () => {
                     <Typography variant={'h5'} mb={2}>
                         My collections
                     </Typography>
-                    <Button
-                        onClick={handleNewItem}
-                        sx={{
-                            color: 'white',
-                            borderColor: 'white',
-                            textTransform: 'none',
-                            ':hover': {
-                                borderColor: '#d5d4d4',
-                            },
-                        }}
-                        startIcon={<AddRounded/>}
-                    >
-                        Add
-                    </Button>
                 </Box>
                 <Box mx={4}>
                     <Stack spacing={2}>
                         {
-                            stores.collections.collections.map((el) => {
+                            stores.collections.collections?.map((el) => {
                                 return (
                                     <>
                                         <Grid container alignItems={'center'}>
                                             <Grid item xs>
                                                 <Typography variant={'body1'}>
-                                                    {el.name}
+                                                    {el.title}
                                                 </Typography>
                                             </Grid>
                                             <Grid item xs sx={{ textAlign: 'end' }}>
@@ -77,21 +55,6 @@ const Collections = () => {
                                                     }}
                                                 >
                                                     Open
-                                                </Button>
-                                                <Button
-                                                    variant={'outlined'}
-                                                    onClick={() => stores.collections.remove(el.id)}
-                                                    sx={{
-                                                        color: theme => theme.palette.error.main,
-                                                        borderColor: theme => theme.palette.error.main,
-                                                        textTransform: 'none',
-                                                        ml: 1,
-                                                        ':hover': {
-                                                            borderColor: theme => theme.palette.error.dark,
-                                                        },
-                                                    }}
-                                                >
-                                                    Remove
                                                 </Button>
                                             </Grid>
                                         </Grid>
