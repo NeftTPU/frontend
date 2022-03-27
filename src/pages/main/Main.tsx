@@ -30,7 +30,6 @@ const Main: FC = () => {
             case 'addImage': {
                 setSnackbarMessage('Image posted! Pick the layer again')
                 return
-                return
             }
             case 'deleteImage': {
                 setSnackbarMessage('Image deleted!')
@@ -90,12 +89,23 @@ const Main: FC = () => {
     }
 
     const handleCreateCollection = async () => {
-        const ids: number[] = []
-        layers.data?.map((layer) => ids.push(layer.id))
-
         const formData = new FormData()
-        formData.append('title', `Collection #${Math.round(Math.random() * 1000).toString()}`)
-        formData.append('collection_ids', JSON.stringify(ids))
+
+        const title = prompt('New collection title', `Collection #${Math.round(Math.random() * 1000)}`)
+        if (title === null || title === '') {
+            alert('Provide correct collection title')
+            return
+        }
+        formData.append('title', title)
+        if (layers.data) {
+            for (const datum of layers.data) {
+                formData.append('collection_ids[]', datum.id.toString())
+            }
+        } else {
+            alert('No layers')
+            return
+        }
+        console.log(...formData)
 
         http.post(COLLECTION_URL, formData)
             .then((res) => {
@@ -210,25 +220,6 @@ const Main: FC = () => {
                         <Typography variant={'h6'}>
                             Preview
                         </Typography>
-                        <Button
-                            variant={'outlined'}
-                            onClick={() => {
-                            }}
-                            sx={{
-                                py: 0.25,
-                                color: 'white',
-                                borderColor: 'white',
-                                borderRadius: 1,
-                                textTransform: 'none',
-                                ':hover': {
-                                    borderColor: '#d5d4d4',
-                                },
-                            }}
-                        >
-                            <Typography variant={'h6'} fontWeight={300}>
-                                Random
-                            </Typography>
-                        </Button>
                     </Stack>
                     <Box
                         width={'100%'}

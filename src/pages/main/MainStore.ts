@@ -33,8 +33,6 @@ class MainStore {
 
     constructor() {
         makeAutoObservable(this)
-        document.cookie = 'csrftoken=g5tEmoV1PbPV0PyPHq7ORxHgBShokurlcSN8SV0NzGw1uZ3p5QeLYiM0sxgrFdoe; expires=Sun, 1 Jan 2023 00:00:00 UTC; path=/'
-        document.cookie = 'sessionid=fdf4csn123d8sno3val0slkg4ncwbods; expires=Sun, 1 Jan 2023 00:00:00 UTC; path=/'
     }
 
     setCurrentLayer = (layer: Layer | null) => {
@@ -46,7 +44,12 @@ class MainStore {
     }
 
     addLayer = async () => {
-        const name = `Layer #${Math.round(Math.random() * 100).toString()}`
+        const name = prompt('Layer name', `Layer #${Math.round(Math.random() * 100)}`)
+
+        if (name === null || name === '') {
+            alert('Provide correct layer name')
+            throw new Error('Provide correct layer name')
+        }
 
         const formData = new FormData()
         formData.append('title', name)
@@ -66,9 +69,15 @@ class MainStore {
     }
 
     addImage = () => {
+        const title = prompt('Image name', `Image #${Math.round(Math.random() * 100)}`)
+
+        if (title === null || title === '') {
+            alert('Provide correct image name')
+            throw new Error('Provide correct image name')
+        }
         this.images.push({
             id: this.images.length + 1,
-            title: 'Image #' + Math.round(Math.random() * 1000).toString(),
+            title: title,
             layer: this.currentLayer as Layer,
         })
     }
