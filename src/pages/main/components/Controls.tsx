@@ -59,7 +59,7 @@ const Controls: FC<ControlsProps> = ({ handleDeleteImage, handleRefetchLayers, h
                                     <label htmlFor={'uploadImage' + neftImage.id.toString()}>
                                         <input
                                             id={'uploadImage' + neftImage.id.toString()}
-                                            // accept={'image/png'}
+                                            accept={'image/png'}
                                             type={'file'}
                                             onChange={(event): void => {
                                                 console.log(neftImage.title)
