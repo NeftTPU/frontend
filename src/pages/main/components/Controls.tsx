@@ -29,141 +29,110 @@ const Controls: FC<ControlsProps> = ({ handleDeleteImage, handleRefetchLayers, h
                 {/* Local, not sended */}
                 {
                     stores.main.images &&
-                    stores.main.images
-                        .map((neftImage) =>
-                            <ListItem
-                                disablePadding
-                                key={stores.main.currentLayer?.id.toString() + neftImage.id.toString()}
+                    stores.main.images.map((neftImage) =>
+                        <ListItem
+                            disablePadding
+                            key={stores.main.currentLayer?.id.toString() + neftImage.id.toString()}
+                            sx={{
+                                borderBottom: '1px solid #fff',
+                                py: 0.5,
+                                width: '100%',
+                            }}
+                        >
+                            <Stack
+                                direction={'row'}
+                                alignItems={'center'}
+                                justifyContent={'space-between'}
                                 sx={{
-                                    borderBottom: '1px solid #fff',
-                                    py: 0.5,
                                     width: '100%',
                                 }}
                             >
-                                <Stack
-                                    direction={'row'}
-                                    alignItems={'center'}
-                                    justifyContent={'space-between'}
+                                <Typography
+                                    variant={'body1'}
                                     sx={{
-                                        width: '100%',
+                                        color: neftImage?.file || neftImage.image?.file ? 'white' : 'red',
                                     }}
                                 >
-                                    <Typography
-                                        variant={'body1'}
-                                        sx={{
-                                            color: neftImage?.file || neftImage.image?.file ? 'white' : 'red',
-                                        }}
-                                    >
-                                        {neftImage.title}
-                                    </Typography>
-                                    <Box>
-                                        <label htmlFor={'uploadImage' + neftImage.id.toString()}>
-                                            <input
-                                                id={'uploadImage' + neftImage.id.toString()}
-                                                accept={'image/png'}
-                                                type={'file'}
-                                                onChange={(event): void => {
-                                                    console.log(neftImage.title)
-                                                    if (event.target.files !== null) {
-                                                        stores.main.setCurrentImage(neftImage)
-                                                        stores.main.uploadImageFileAndPath(event.target.files[0])
-                                                            .then(() => {
-                                                                handleRefetchLayers()
-                                                                handleOpenSnackbar('addImage')
-                                                            })
-                                                    }
-                                                }}
-                                                style={{
-                                                    display: 'none',
-                                                }}
-                                            />
-                                            <IconButton component={'span'}>
-                                                <FileUploadIcon sx={{ color: 'white' }}/>
-                                            </IconButton>
-                                        </label>
-                                        <IconButton
-                                            onClick={() => stores.main.setCurrentImage(neftImage)}
-                                        >
-                                            <Visibility sx={{ color: 'white' }}/>
-                                        </IconButton>
-                                        <IconButton
-                                            onClick={() => {
-                                                handleDeleteImage(neftImage.id)
-                                                handleOpenSnackbar('deleteImage')
+                                    {neftImage.title}
+                                </Typography>
+                                <Box>
+                                    <label htmlFor={'uploadImage' + neftImage.id.toString()}>
+                                        <input
+                                            id={'uploadImage' + neftImage.id.toString()}
+                                            // accept={'image/png'}
+                                            type={'file'}
+                                            onChange={(event): void => {
+                                                console.log(neftImage.title)
+                                                if (event.target.files !== null) {
+                                                    stores.main.setCurrentImage(neftImage)
+                                                    stores.main.uploadImageFileAndPath(event.target.files[0])
+                                                        .then(() => {
+                                                            handleRefetchLayers()
+                                                            handleOpenSnackbar('addImage')
+                                                        })
+                                                }
                                             }}
-                                        >
-                                            <DeleteIcon sx={{ color: 'white' }}/>
+                                            style={{
+                                                display: 'none',
+                                            }}
+                                        />
+                                        <IconButton component={'span'}>
+                                            <FileUploadIcon sx={{ color: 'white' }}/>
                                         </IconButton>
-                                    </Box>
-                                </Stack>
-                            </ListItem>)
+                                    </label>
+                                </Box>
+                            </Stack>
+                        </ListItem>)
                 }
 
                 {/* From server*/}
                 {
-                    stores.main.currentLayer && stores.main.currentLayer.layer_set &&
-                    stores.main.currentLayer.layer_set
-                        .map((neftImage) =>
-                            <ListItem
-                                disablePadding
-                                key={stores.main.currentLayer?.id.toString() + neftImage.id.toString()}
+                    stores.main.currentLayer &&
+                    stores.main.currentLayer.layer_set &&
+                    stores.main.currentLayer.layer_set.map((neftImage) =>
+                        <ListItem
+                            disablePadding
+                            key={stores.main.currentLayer?.id.toString() + neftImage.id.toString()}
+                            sx={{
+                                borderBottom: '1px solid #fff',
+                                py: 0.5,
+                                width: '100%',
+                            }}
+                        >
+                            <Stack
+                                direction={'row'}
+                                alignItems={'center'}
+                                justifyContent={'space-between'}
                                 sx={{
-                                    borderBottom: '1px solid #fff',
-                                    py: 0.5,
                                     width: '100%',
                                 }}
                             >
-                                <Stack
-                                    direction={'row'}
-                                    alignItems={'center'}
-                                    justifyContent={'space-between'}
+                                <Typography
+                                    variant={'body1'}
                                     sx={{
-                                        width: '100%',
+                                        color: neftImage?.file || neftImage.image?.file ? 'white' : 'red',
                                     }}
                                 >
-                                    <Typography
-                                        variant={'body1'}
-                                        sx={{
-                                            color: neftImage?.file || neftImage.image?.file ? 'white' : 'red',
+                                    {neftImage.title}
+                                </Typography>
+                                <Box>
+                                    <IconButton
+                                        onClick={() => stores.main.setCurrentImage(neftImage)}
+                                    >
+                                        <Visibility sx={{ color: 'white' }}/>
+                                    </IconButton>
+                                    <IconButton
+                                        onClick={() => {
+                                            handleDeleteImage(neftImage.id)
+                                            handleRefetchLayers()
+                                            handleOpenSnackbar('deleteImage')
                                         }}
                                     >
-                                        {neftImage.title}
-                                    </Typography>
-                                    <Box>
-                                        <label htmlFor={'uploadImage' + neftImage.id.toString()}>
-                                            <input
-                                                id={'uploadImage' + neftImage.id.toString()}
-                                                accept={'image/png'}
-                                                type={'file'}
-                                                onChange={(event): void => {
-                                                    console.log(neftImage.title)
-                                                    if (event.target.files !== null) {
-                                                        stores.main.setCurrentImage(neftImage)
-                                                        stores.main.uploadImageFileAndPath(event.target.files[0])
-                                                        handleRefetchLayers()
-                                                    }
-                                                }}
-                                                style={{
-                                                    display: 'none',
-                                                }}
-                                            />
-                                            <IconButton component={'span'}>
-                                                <FileUploadIcon sx={{ color: 'white' }}/>
-                                            </IconButton>
-                                        </label>
-                                        <IconButton
-                                            onClick={() => stores.main.setCurrentImage(neftImage)}
-                                        >
-                                            <Visibility sx={{ color: 'white' }}/>
-                                        </IconButton>
-                                        <IconButton
-                                            onClick={() => handleDeleteImage(neftImage.id)}
-                                        >
-                                            <DeleteIcon sx={{ color: 'white' }}/>
-                                        </IconButton>
-                                    </Box>
-                                </Stack>
-                            </ListItem>)
+                                        <DeleteIcon sx={{ color: 'white' }}/>
+                                    </IconButton>
+                                </Box>
+                            </Stack>
+                        </ListItem>)
                 }
             </List>
         </Box>
